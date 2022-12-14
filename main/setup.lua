@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-field
 local write = io.write
 
 function s_print(...)
