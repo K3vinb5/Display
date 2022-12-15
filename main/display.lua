@@ -51,34 +51,35 @@ local function main()
     local coordinates = {}
     local senderId, message, protocol = rednet.receive()
 
-    ::continue::
+    while true do
 
-    if protocol == input then
+        if protocol == input then
 
-        gui.gui.text.label.text.text = protocol
+            gui.gui.text.label.text.text = protocol
 
-        while true do
-            if protocol == input then
+            while true do
+                if protocol == input then
 
-                gui.gui.text.coordinates.visible = false
-                gui.gui.text.coordinates.visible = true
+                    gui.gui.text.coordinates.visible = false
+                    gui.gui.text.coordinates.visible = true
 
-                local senderId, message, protocol = rednet.receive()
-                gui.gui.text.coordinates.text.text =
-                    "Current Coordinates: " .. message[1] .. " " .. message[2] .. " " .. message[3]
-                gui.gui.progressbar.progress_bar_1.value = message[4]
-                gui.gui.progressbar.progress_bar_0.value = message[5]
+                    local senderId, message, protocol = rednet.receive()
+                    gui.gui.text.coordinates.text.text =
+                        "Current Coordinates: " .. message[1] .. " " .. message[2] .. " " .. message[3]
+                    gui.gui.progressbar.progress_bar_1.value = message[4]
+                    gui.gui.progressbar.progress_bar_0.value = message[5]
 
+                end
+                os.sleep(0.5)
             end
-            os.sleep(0.5)
+        else
+            term.redirect(term.native())
+            shell.run("clear")
+            print("\nMade by Kevinb5")
+            print("\nNo Turtles with that name :(\n\nRebooting Computer...")
+            term.redirect(monitor)
         end
-    else
-        term.redirect(term.native())
-        shell.run("clear")
-        print("\nMade by Kevinb5")
-        print("\nNo Turtles with that name :(\n\nRebooting Computer...")
-        term.redirect(monitor)
-        goto continue
+
     end
 
 end
