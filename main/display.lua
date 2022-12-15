@@ -51,6 +51,8 @@ local function main()
     local coordinates = {}
     local senderId, message, protocol = rednet.receive()
 
+    ::continue::
+
     if protocol == input then
 
         gui.gui.text.label.text.text = protocol
@@ -70,14 +72,14 @@ local function main()
             end
             os.sleep(0.5)
         end
+    else
+        term.redirect(term.native())
+        shell.run("clear")
+        print("\nMade by Kevinb5")
+        print("\nNo Turtles with that name :(\n\nRebooting Computer...")
+        term.redirect(monitor)
+        goto continue
     end
-
-    term.redirect(term.native())
-    shell.run("clear")
-    print("\nMade by Kevinb5")
-    print("\nNo Turtles with that name :(\n\nRebooting Computer...")
-    os.sleep(3)
-    os.reboot()
 
 end
 
@@ -183,5 +185,5 @@ new_text("fuel_level", "Fuel", 12, 11)
 new_progress_bar("progress_bar_1", 2, 14, 24, 3, 0)
 new_text("progress_level", "Progress", 10, 15)
 
-
+print("My id is: " .. os.getComputerID())
 gui.execute(main)
