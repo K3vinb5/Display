@@ -14,8 +14,7 @@ end
 
 shell.run("clear")
 print("\nMade by Kevinb5")
-s_print("\nChoose which Turtle's information you want to see by writing its name: ")
-local input = io.read()
+
 s_print("\nOn what side is you Monitor attached: ")
 local side = io.read()
 s_print("\nOn what side is your modem attached: ")
@@ -23,7 +22,6 @@ local modem = io.read()
 
 local arguments_handler = fs.open("Display/args.txt", "w")
 
-arguments_handler.writeLine(input)
 arguments_handler.writeLine(side)
 arguments_handler.writeLine(modem)
 

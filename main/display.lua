@@ -12,7 +12,6 @@ end
 
 if file_exists("Display/args.txt") then
     local arguments_handler = fs.open("Display/args.txt", "r")
-    label = arguments_handler.readLine()
     side = arguments_handler.readLine()
     modem = arguments_handler.readLine()
     arguments_handler.close()
@@ -128,7 +127,7 @@ end
 
 local function updateGui()
 
-        gui.gui.text.label.text.text = label
+        gui.gui.text.label.text.text = message[6]
 
         gui.gui.text.coordinates.visible = false
         gui.gui.text.coordinates.visible = true
@@ -138,7 +137,7 @@ local function updateGui()
         until channel == os.getComputerID()
 
         gui.gui.text.coordinates.text.text =
-            "Current Coordinates: " .. message[1] .. " " .. message[2] .. " " .. message[3]
+            "Current Coordinates: " .. message[1] .. " " .. message[3]
         gui.gui.progressbar.progress_bar_1.value = message[4]
         gui.gui.progressbar.progress_bar_0.value = message[5]
 
