@@ -30,24 +30,14 @@ if file_exists("Display/args.txt") then
 
 else
 
-    shell.run("clear")
-    print("\nMade by Kevinb5")
-    s_print("\nChoose which Turtle's information you want to see by writing its name: ")
-    input = io.read()
-    s_print("\nOn what side is you Monitor attached: ")
-    side = io.read()
-    print("\nDone!")
-
 end
 
 local api = require("/GuiH")
-monitor = peripheral.wrap(side)
-term.redirect(monitor)
-local gui = api.create_gui(term.current())
+
 
 local function main()
 
-    rednet.open("back")
+    rednet.open(side)
     local coordinates = {}
     local senderId, message, protocol = rednet.receive()
 
@@ -187,4 +177,7 @@ new_progress_bar("progress_bar_1", 2, 14, 24, 3, 0)
 new_text("progress_level", "Progress", 10, 15)
 
 print("My id is: " .. os.getComputerID())
+monitor = peripheral.wrap(side)
+term.redirect(monitor)
+local gui = api.create_gui(term.current())
 gui.execute(main)
