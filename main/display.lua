@@ -1,7 +1,5 @@
 ---@diagnostic disable: undefined-field
 
-local api = require("/GuiH") --Imports GUI
-
 function file_exists(name)
     local f = io.open(name, "r")
     if f ~= nil then
@@ -12,7 +10,24 @@ function file_exists(name)
     end
 end
 
-local write = io.write
+if file_exists("Display/args.txt") then
+    local arguments_handler = fs.open("Display/args.txt", "r")
+    label = arguments_handler.readLine()
+    side = arguments_handler.readLine()
+    modem = arguments_handler.readLine()
+    arguments_handler.close()
+
+else
+    error("You haven't run setDisplay yet")
+end
+
+local api = require("/GuiH") --Imports GUI
+monitor = peripheral.wrap(side)
+term.redirect(monitor)
+local gui = api.create_gui(term.current())
+
+
+--local write = io.write
 
 function s_print(...)
     local n = select("#", ...)
@@ -111,45 +126,41 @@ function new_progress_bar(name_arg, x_arg, y_arg, width_arg, height_arg, value_a
     })
 end
 
+local function updateGui()
+
+        gui.gui.text.label.text.text = label
+
+        gui.gui.text.coordinates.visible = false
+        gui.gui.text.coordinates.visible = true
+
+        repeat
+            event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
+        until channel == os.getComputerID()
+
+        gui.gui.text.coordinates.text.text =
+            "Current Coordinates: " .. message[1] .. " " .. message[2] .. " " .. message[3]
+        gui.gui.progressbar.progress_bar_1.value = message[4]
+        gui.gui.progressbar.progress_bar_0.value = message[5]
+
+    os.sleep(0.5)
+end
+
 local function main()
 
-    rednet.open(side)
-    local senderId, message, protocol = rednet.receive()
+    local modem = peripheral.wrap(modem)
+    modem.open(os.getComputerID())
+
+    gui.gui.text.label.text.text = "Waiting Message...\nMy id is: " .. os.getComputerID()
+
+    repeat
+        event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
+    until channel == os.getComputerID()
 
     while true do
-
-        if protocol == input then
-
-            gui.gui.text.label.text.text = protocol
-
-            while true do
-                if protocol == input then
-
-                    gui.gui.text.coordinates.visible = false
-                    gui.gui.text.coordinates.visible = true
-
-                    local senderId, message, protocol = rednet.receive()
-                    gui.gui.text.coordinates.text.text =
-                        "Current Coordinates: " .. message[1] .. " " .. message[2] .. " " .. message[3]
-                    gui.gui.progressbar.progress_bar_1.value = message[4]
-                    gui.gui.progressbar.progress_bar_0.value = message[5]
-
-                end
-                os.sleep(0.5)
-            end
-        else
-            term.redirect(term.native())
-            shell.run("clear")
-            print("\nMade by Kevinb5")
-            print("\nNo Turtles with that name :(\n\nRebooting Computer...")
-            term.redirect(monitor)
-        end
-
+        updateGui()
     end
 
 end
-
-
 
 -- Buttons:
 new_button("button_0", 31, 16, 8, 3, colors.red, " Off", shutdown)
@@ -169,17 +180,5 @@ new_text("progress_level", "Progress", 10, 15)
 
 print("My id is: " .. os.getComputerID())
 
-if file_exists("Display/args.txt") then
-    local arguments_handler = fs.open("Display/args.txt", "r")
-    input = arguments_handler.readLine()
-    side = arguments_handler.readLine()
-    arguments_handler.close()
+    gui.execute(main)
 
-else
-
-end
-
-monitor = peripheral.wrap(side)
-term.redirect(monitor)
-local gui = api.create_gui(term.current())
-gui.execute(main)
