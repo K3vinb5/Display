@@ -39,7 +39,7 @@ function s_print(...)
     end
 end
 
-function shutdown()
+function clearDisplay()
     gui.gui.text.coordinates.visible = false
     gui.gui.text.label.visible = false
     gui.gui.text.credits.visible = false
@@ -51,25 +51,18 @@ function shutdown()
 
     gui.gui.button.button_0.visible = false
     gui.gui.button.button_1.visible = false
+end
 
+function shutdown()
+    clearDisplay()
     os.shutdown()
 end
 
 function reboot()
-    gui.gui.text.coordinates.visible = false
-    gui.gui.text.label.visible = false
-    gui.gui.text.credits.visible = false
-    gui.gui.text.fuel_level.visible = false
-    gui.gui.text.progress_level.visible = false
-
-    gui.gui.progressbar.progress_bar_0.visible = false
-    gui.gui.progressbar.progress_bar_1.visible = false
-
-    gui.gui.button.button_0.visible = false
-    gui.gui.button.button_1.visible = false
-
+    clearDisplay()
     os.reboot()
 end
+
 
 function execute_function(function_name)
     function_name()
