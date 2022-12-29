@@ -121,7 +121,6 @@ function previousChannel()
         gui.gui.progressbar.progress_bar_1.value = 0
         gui.gui.progressbar.progress_bar_0.value = 0
         gui.gui.text.label.text.text = "Display's Id: " .. os.getComputerID()
-        saveCurrentChannel()
     end
 end
 
