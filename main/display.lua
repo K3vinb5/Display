@@ -1,7 +1,7 @@
 ---@diagnostic disable: undefined-field
 
-CurrentChannel = 0
 
+ReceivingChannel = 65533
 
 function file_exists(name)
     local f = io.open(name, "r")
@@ -50,6 +50,23 @@ function s_print(...)
     end
 end
 
+function loadCurrentChannel()
+    if file_exists("Display/lastChannel.txt") then
+        local lastChannelScanner = fs.open("Display/lastChannel.txt", "r")
+        output = tonumber(lastChannelScanner.readLine())
+        lastChannelScanner.close()
+    else
+        return 0
+    end
+    return output
+end
+
+function saveCurrentChannel()
+    local lastChannelScanner = fs.open("Display/lastChannel.txt", "w")
+    lastChannelScanner.writeLine(tostring(CurrentChannel))
+    lastChannelScanner.close()
+end
+
 function clearDisplay()
     gui.gui.text.coordinates.visible = false
     gui.gui.text.label.visible = false
@@ -85,6 +102,7 @@ function nextChannel()
     gui.gui.progressbar.progress_bar_1.value = 0
     gui.gui.progressbar.progress_bar_0.value = 0
     gui.gui.text.label.text.text = "Display's Id: " .. os.getComputerID()
+    saveCurrentChannel()
 end
 
 function previousChannel()
@@ -95,6 +113,7 @@ function previousChannel()
         gui.gui.progressbar.progress_bar_1.value = 0
         gui.gui.progressbar.progress_bar_0.value = 0
         gui.gui.text.label.text.text = "Display's Id: " .. os.getComputerID()
+        saveCurrentChannel()
     else
         CurrentChannel = 0
         gui.gui.text.currentChannel.text.text = "Turtle Channel: " .. tostring(CurrentChannel)
@@ -102,6 +121,7 @@ function previousChannel()
         gui.gui.progressbar.progress_bar_1.value = 0
         gui.gui.progressbar.progress_bar_0.value = 0
         gui.gui.text.label.text.text = "Display's Id: " .. os.getComputerID()
+        saveCurrentChannel()
     end
 end
 
@@ -168,7 +188,7 @@ local function updateGui()
 
         repeat
             event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
-        until ( channel == os.getComputerID() and replyChannel == CurrentChannel)
+        until ( channel == ReceivingChannel and replyChannel == CurrentChannel)
 
         gui.gui.text.coordinates.text.text =
             "Current Coordinates: " .. message[1] .. " " .. message[3]
@@ -181,13 +201,13 @@ end
 local function main()
 
     local modem = peripheral.wrap(modem)
-    modem.open(os.getComputerID())
+    modem.open(ReceivingChannel)
 
     gui.gui.text.label.text.text = "Display's Id: " .. os.getComputerID()
 
     repeat
         event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
-    until ( channel == os.getComputerID() and replyChannel == CurrentChannel)
+    until ( channel == ReceivingChannel and replyChannel == CurrentChannel)
     
 
     while true do
@@ -195,6 +215,8 @@ local function main()
     end
 
 end
+
+CurrentChannel = loadCurrentChannel()
 
 -- Buttons:
 new_button("button_0", 31, 16, 8, 3, colors.red, " Off", shutdown)
@@ -205,7 +227,7 @@ new_button("button_3", 31, 2, 8, 3, colors.yellow, ">\nNext", nextChannel)
 new_text("coordinates", "Current Coordinates: ", 2, 7)
 new_text("label", "Name", 13, 2)
 new_text("credits", "Made by Kevinb5", 1, 19)
-new_text("currentChannel", "Turtle Channel: " .. tostring(CurrentChannel), 13, 4)
+new_text("currentChannel", "Turtle Channel: " .. CurrentChannel, 13, 4)
 
 -- ProgressBars:
 new_progress_bar("progress_bar_0", 2, 10, 24, 3, 0)
