@@ -1,5 +1,8 @@
 ---@diagnostic disable: undefined-field
 
+CurrentChannel = 0
+
+
 function file_exists(name)
     local f = io.open(name, "r")
     if f ~= nil then
@@ -26,7 +29,15 @@ term.redirect(monitor)
 local gui = api.create_gui(term.current())
 
 
---local write = io.write
+local function has_value (tab, val)
+    for index, value in ipairs(tab) do
+        if value == val then
+            return true
+        end
+    end
+
+    return false
+end
 
 function s_print(...)
     local n = select("#", ...)
@@ -45,16 +56,20 @@ function clearDisplay()
     gui.gui.text.credits.visible = false
     gui.gui.text.fuel_level.visible = false
     gui.gui.text.progress_level.visible = false
+    gui.gui.text.currentChannel.visible = false
 
     gui.gui.progressbar.progress_bar_0.visible = false
     gui.gui.progressbar.progress_bar_1.visible = false
 
     gui.gui.button.button_0.visible = false
     gui.gui.button.button_1.visible = false
+    gui.gui.button.button_2.visible = false
+    gui.gui.button.button_3.visible = false
 end
 
 function shutdown()
     clearDisplay()
+    os.sleep(1)
     os.shutdown()
 end
 
@@ -63,6 +78,32 @@ function reboot()
     os.reboot()
 end
 
+function nextChannel()
+    CurrentChannel = CurrentChannel + 1
+    gui.gui.text.currentChannel.text.text = "Turtle Channel: " .. tostring(CurrentChannel)
+    gui.gui.text.coordinates.text.text = "Current Coordinates: "
+    gui.gui.progressbar.progress_bar_1.value = 0
+    gui.gui.progressbar.progress_bar_0.value = 0
+    gui.gui.text.label.text.text = "Display's Id: " .. os.getComputerID()
+end
+
+function previousChannel()
+    if (CurrentChannel > 0) then
+        CurrentChannel = CurrentChannel - 1
+        gui.gui.text.currentChannel.text.text = "Turtle Channel: " .. tostring(CurrentChannel)
+        gui.gui.text.coordinates.text.text = "Current Coordinates: "
+        gui.gui.progressbar.progress_bar_1.value = 0
+        gui.gui.progressbar.progress_bar_0.value = 0
+        gui.gui.text.label.text.text = "Display's Id: " .. os.getComputerID()
+    else
+        CurrentChannel = 0
+        gui.gui.text.currentChannel.text.text = "Turtle Channel: " .. tostring(CurrentChannel)
+        gui.gui.text.coordinates.text.text = "Current Coordinates: "
+        gui.gui.progressbar.progress_bar_1.value = 0
+        gui.gui.progressbar.progress_bar_0.value = 0
+        gui.gui.text.label.text.text = "Display's Id: " .. os.getComputerID()
+    end
+end
 
 function execute_function(function_name)
     function_name()
@@ -120,14 +161,14 @@ end
 
 local function updateGui()
 
-        gui.gui.text.label.text.text = message[6]
+        gui.gui.text.label.text.text = "Name: " .. message[6]
 
         gui.gui.text.coordinates.visible = false
         gui.gui.text.coordinates.visible = true
 
         repeat
             event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
-        until channel == os.getComputerID()
+        until ( channel == os.getComputerID() and replyChannel == CurrentChannel)
 
         gui.gui.text.coordinates.text.text =
             "Current Coordinates: " .. message[1] .. " " .. message[3]
@@ -142,11 +183,12 @@ local function main()
     local modem = peripheral.wrap(modem)
     modem.open(os.getComputerID())
 
-    gui.gui.text.label.text.text = "Waiting Message...\nMy id is: " .. os.getComputerID()
+    gui.gui.text.label.text.text = "Display's Id: " .. os.getComputerID()
 
     repeat
         event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
-    until channel == os.getComputerID()
+    until ( channel == os.getComputerID() and replyChannel == CurrentChannel)
+    
 
     while true do
         updateGui()
@@ -157,11 +199,13 @@ end
 -- Buttons:
 new_button("button_0", 31, 16, 8, 3, colors.red, " Off", shutdown)
 new_button("button_1", 31, 12, 8, 3, colors.green, "Reboot", reboot)
-
+new_button("button_2", 2, 2, 8, 3, colors.yellow, "<\nPrevious", previousChannel)
+new_button("button_3", 31, 2, 8, 3, colors.yellow, ">\nNext", nextChannel)
 -- Texts:
-new_text("coordinates", "Current Coordinates: ", 2, 6)
-new_text("label", "Name", 16, 2)
+new_text("coordinates", "Current Coordinates: ", 2, 7)
+new_text("label", "Name", 13, 2)
 new_text("credits", "Made by Kevinb5", 1, 19)
+new_text("currentChannel", "Turtle Channel: " .. tostring(CurrentChannel), 13, 4)
 
 -- ProgressBars:
 new_progress_bar("progress_bar_0", 2, 10, 24, 3, 0)
