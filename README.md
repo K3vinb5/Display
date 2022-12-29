@@ -29,8 +29,6 @@ You will be asked on what side is your modem on and on what side is the monitor 
 
 ## (3rd step - Setting up the turtle)
 
-The computer should restart and if you didn't run the ``` setDisplay ``` before on your turtle you should do it now, in the monitor it will be displayed the id of the computer so you can insert it on your turtle.
-
-After you run ``` setDisplay ``` on your turtle and the turtle starts working on a hole the computer will find the turtle and display its information, and once you have configured this, you will never have to do it again, every time the turtle starts the program, you will have its information displayed.
+You will be presented with a menu wherer you can choose your turtle id to look at his stats if you have multiple turtles you can always change which one you're seeing in the stats
 
 ![alt text](https://i.imgur.com/2NP6s6T.png)
