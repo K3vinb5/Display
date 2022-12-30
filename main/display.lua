@@ -193,10 +193,10 @@ local function updateGui()
             "Current Coordinates: " .. message[1] .. " " .. message[3]
             local fuelLevel = message[4]
             gui.gui.progressbar.progress_bar_1.value = fuelLevel
-            gui.gui.fuel_level.text.text = "Fuel: " .. fuelLevel
+            gui.gui.text.fuel_level.text.text = "Fuel: " .. fuelLevel
             local progress = message[5]
             gui.gui.progressbar.progress_bar_0.value = progress
-            gui.gui.progress_level.text.text = "Progress: " .. progress
+            gui.gui.text.progress_level.text.text = "Progress: " .. progress
     os.sleep(0.5)
 end
 
