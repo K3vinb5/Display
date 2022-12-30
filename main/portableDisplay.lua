@@ -184,7 +184,7 @@ local function updateGui()
         local fuelLevel = message[4]
         gui.gui.progressbar.progress_bar_1.value = fuelLevel
         gui.gui.fuel_level.text.text = "Fuel: " .. fuelLevel
-        local progress
+        local progress = message[5]
         gui.gui.progressbar.progress_bar_0.value = progress
         gui.gui.progress_level.text.text = "Progress: " .. progress
     os.sleep(0.5)
