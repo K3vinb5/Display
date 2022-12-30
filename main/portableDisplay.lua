@@ -181,10 +181,10 @@ local function updateGui()
 
         gui.gui.text.coordinates.text.text =
             "Current Coordinates: " .. "\n" .. message[1] .. " " .. message[3]
-        local fuelLevel = message[4]
+        local fuelLevel = math.ceil(message[4])
         gui.gui.progressbar.progress_bar_1.value = fuelLevel
         gui.gui.text.fuel_level.text.text = "Fuel: " .. fuelLevel
-        local progress = message[5]
+        local progress = math.ceil(message[5])
         gui.gui.progressbar.progress_bar_0.value = progress
         gui.gui.text.progress_level.text.text = "Progress: " .. progress
     os.sleep(0.5)
@@ -223,10 +223,10 @@ new_text("currentChannel", "Turtle Channel: " .. "\n" .. CurrentChannel, 2, 4)
 
 -- ProgressBars:
 new_progress_bar("progress_bar_0", 2, 14, 16, 2, 0)
-new_text("fuel_level", "Fuel", 6, 15)
+new_text("fuel_level", "Fuel", 4, 15)
 
 new_progress_bar("progress_bar_1", 2, 17, 16, 2, 0)
-new_text("progress_level", "Progress", 6, 18)
+new_text("progress_level", "Progress", 4, 18)
 
 print("My id is: " .. os.getComputerID())
 
