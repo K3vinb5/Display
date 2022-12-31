@@ -213,8 +213,8 @@ CurrentChannel = loadCurrentChannel()
 -- Buttons:
 new_button("button_0", 20, 19, 6, 2, colors.red, " Off", shutdown)
 new_button("button_1", 20, 16, 6, 2, colors.green, "Reboot", reboot)
-new_button("button_2", 18, 6, 8, 3, colors.yellow, "<\nPrevious", previousChannel)
-new_button("button_3", 18, 2, 8, 3, colors.yellow, ">\nNext", nextChannel)
+new_button("button_2", 18, 6, 8, 2, colors.yellow, "<\nPrevious", previousChannel)
+new_button("button_3", 18, 2, 8, 2, colors.yellow, ">\nNext", nextChannel)
 -- Texts:
 new_text("coordinates", "Current Coordinates: ", 2, 10)
 new_text("label", "Name", 2, 2)
